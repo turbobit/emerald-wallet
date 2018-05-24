@@ -14,13 +14,13 @@ const currentChain = (state) => launcher.selectors.getChainName(state);
 type Transaction = {
     from: string,
     // Can also be null or void
-    to: ?string,
+    to: string | null | void,
     value: string,
     nonce: string,
     gas: string,
     gasPrice: string,
     // Can either be void or omitted altogether. Cannot be null
-    data?: string,
+    data: string | void | undefined,
 }
 
 const log = createLogger('accountActions');

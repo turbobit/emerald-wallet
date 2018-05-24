@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { TextField as ReduxFormTextField } from 'redux-form-material-ui';
 
 const defaultStyle = {
@@ -8,7 +8,21 @@ const defaultStyle = {
   lineHeight: '24px',
 };
 
-const container = {
+type Container = {
+  boxSizing: string,
+  border: string,
+  borderColor: string,
+  borderRadius: string,
+  paddingLeft: string,
+  paddingRight: string,
+  display: string,
+  alignItems: string,
+  width?: string,
+  maxHeight?: string,
+  minWidth?: string
+};
+
+const container: Container = {
   boxSizing: 'border-box',
   border: '1px solid',
   borderColor: '#DDDDDD',
@@ -16,19 +30,27 @@ const container = {
   paddingLeft: '10px',
   paddingRight: '10px',
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'center'
 };
 
 
 type Props = {
-  rightIcon: Element<typeof Icon>,
-  leftIcon: Element,
+  rightIcon: JSX.Element,
+  leftIcon: JSX.Element,
   error: string,
-  style: Object,
+  style: {
+    maxHeight: string,
+    minWidth: string
+  },
+  fieldStyle: any,
   fullWidth: boolean,
+  meta: {
+    touched: boolean,
+    error: Error
+  }
 }
 
-export const TextField = ({ rightIcon, error, style, leftIcon, fieldStyle, ...other }: Props) => {
+export const TextField = ({ rightIcon, error, style, leftIcon, fieldStyle, ...other }: Props): JSX.Element => {
   if (other.fullWidth) {
     container.width = '100%';
   }
@@ -36,7 +58,8 @@ export const TextField = ({ rightIcon, error, style, leftIcon, fieldStyle, ...ot
   const invalid = error || (other.meta && other.meta.touched && other.meta.error);
   let containerStyle = invalid ? {...container, borderColor: '#BC0000' } : container;
   if (style) {
-    containerStyle = { ...containerStyle, maxHeight: style.maxHeight, minWidth: style.minWidth };
+    const { maxHeight, minWidth } = style;
+    containerStyle = { ...containerStyle, maxHeight, minWidth };
   }
 
   const textFieldStyle = invalid ? {...defaultStyle, color: '#BC0000' } : defaultStyle;

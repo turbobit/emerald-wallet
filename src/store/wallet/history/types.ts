@@ -11,4 +11,5 @@ export type Transaction = {
   data: string,
   input: string,
   nonce: number,
+  blockHash: string
 };

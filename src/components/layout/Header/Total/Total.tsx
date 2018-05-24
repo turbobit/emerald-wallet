@@ -1,5 +1,4 @@
-// @flow
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Wei } from 'emerald-js';
@@ -15,6 +14,7 @@ type Props = {
   showFiat?: boolean,
   fiatAmount?: string,
   fiatCurrency?: string,
+  muiTheme: any
 };
 
 const Total = ({ total, showFiat, fiatAmount, fiatCurrency, muiTheme }: Props) => {
@@ -35,11 +35,6 @@ const Total = ({ total, showFiat, fiatAmount, fiatCurrency, muiTheme }: Props) =
       icon={<EtcSimple style={{color: muiTheme.palette.secondaryTextColor}}/>}
     />
   );
-};
-
-Total.propTypes = {
-  showFiat: PropTypes.bool,
-  total: PropTypes.string.isRequired,
 };
 
 export default connect(

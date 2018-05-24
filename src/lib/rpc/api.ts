@@ -1,8 +1,8 @@
-// @flow
 import { EthRpc, JsonRpc, HttpTransport, Vault, VaultJsonRpcProvider, VaultInMemoryProvider } from 'emerald-js';
 
 export default class Api {
     emerald: Vault;
+    geth: EthRpc;
 
     constructor() {
       this.emerald = new Vault(
@@ -19,4 +19,3 @@ export default class Api {
 }
 
 export const api = new Api();
-

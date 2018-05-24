@@ -1,46 +1,59 @@
+"use strict";
+exports.__esModule = true;
 // @flow
-import log from 'electron-log';
-
+var electron_log_1 = require("electron-log");
 /**
  * Wrapper for logging mechanism.
  * Future: can be used with any log library under the hood
  */
-class Logger {
-    category: string;
-
-    constructor(category: string) {
-      this.category = category;
+var Logger = /** @class */ (function () {
+    function Logger(category) {
+        this.category = category;
     }
-
-    info(text: string, ...params: Array<any>): void {
-      this.log(log.info, text, params);
-    }
-
-    debug(text: string, ...params: Array<any>): void {
-      this.log(log.debug, text, params);
-    }
-
-    error(text: string, ...params: Array<any>): void {
-      this.log(log.error, text, params);
-    }
-
-    warn(text: string, ...params: Array<any>): void {
-      this.log(log.warn, text, params);
-    }
-
-    trace(text: string, ...params: Array<any>): void {
-      this.log(log.verbose, text, params);
-    }
-
-    log(func: (...params: any[]) => void, text: string, params: Array<any>) {
-      if (params.length > 0) {
-        func(`${this.category} - ${text}`, ...params);
-      } else {
-        func(`${this.category} - ${text}`);
-      }
-    }
-}
-
-const createLogger = (category: string) => new Logger(category);
-
-export default createLogger;
+    Logger.prototype.info = function (text) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        this.log(electron_log_1["default"].info, text, params);
+    };
+    Logger.prototype.debug = function (text) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        this.log(electron_log_1["default"].debug, text, params);
+    };
+    Logger.prototype.error = function (text) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        this.log(electron_log_1["default"].error, text, params);
+    };
+    Logger.prototype.warn = function (text) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        this.log(electron_log_1["default"].warn, text, params);
+    };
+    Logger.prototype.trace = function (text) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        this.log(electron_log_1["default"].verbose, text, params);
+    };
+    Logger.prototype.log = function (func, text, params) {
+        if (params.length > 0) {
+            func.apply(void 0, [this.category + " - " + text].concat(params));
+        }
+        else {
+            func(this.category + " - " + text);
+        }
+    };
+    return Logger;
+}());
+var createLogger = function (category) { return new Logger(category); };
+exports["default"] = createLogger;

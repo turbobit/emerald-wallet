@@ -16,6 +16,7 @@ type TokenInfo = {
   address: string,
   symbol: string,
   decimals: string,
+  totalSupply: string
 }
 
 export function resetBalances() {
@@ -24,10 +25,12 @@ export function resetBalances() {
   };
 }
 
+type DoWork = (dispatch: any, getState: any, api: any) => Promise<any>;
+
 /**
  * Load balance of particular token for particular account
  */
-export function loadTokenBalanceOf(token: TokenInfo, accountId: string) {
+export function loadTokenBalanceOf(token: TokenInfo, accountId: string): DoWork {
   return (dispatch: any, getState: any, api: any) => {
     if (token.address) {
       const data = tokenContract.functionToData('balanceOf', { _owner: accountId });
@@ -47,7 +50,7 @@ export function loadTokenBalanceOf(token: TokenInfo, accountId: string) {
 /**
  * For every account load balance of particular token
  */
-export function loadTokenBalances(token: TokenInfo) {
+export function loadTokenBalances(token: TokenInfo): DoWork {
   return (dispatch, getState, api) => {
     const accounts = getState().accounts;
     if (!accounts.get('loading')) {
@@ -75,7 +78,8 @@ export function loadTokenBalances(token: TokenInfo) {
   };
 }
 
-export function loadTokenDetails(tokenAddress: string): () => Promise<any> {
+
+export function loadTokenDetails(tokenAddress: string): DoWork {
   return (dispatch, getState, api) => {
     const batch = [
       { id: 'totalSupply', to: tokenAddress, data: tokenContract.functionToData('totalSupply') },
@@ -83,7 +87,7 @@ export function loadTokenDetails(tokenAddress: string): () => Promise<any> {
       { id: 'symbol', to: tokenAddress, data: tokenContract.functionToData('symbol') },
     ];
 
-    return api.geth.ext.batchCall(batch).then((results: Array<any>) => {
+    return api.geth.ext.batchCall(batch).then((results: any) => {
       dispatch({
         type: ActionTypes.SET_INFO,
         address: tokenAddress,
@@ -95,7 +99,7 @@ export function loadTokenDetails(tokenAddress: string): () => Promise<any> {
   };
 }
 
-export function fetchTokenDetails(tokenAddress: string): () => Promise<any> {
+export function fetchTokenDetails(tokenAddress: string): DoWork {
   return (dispatch, getState, api) => {
     return Promise.all([
       api.geth.eth.call(tokenAddress, tokenContract.functionToData('totalSupply')),
@@ -118,7 +122,7 @@ export function fetchTokenDetails(tokenAddress: string): () => Promise<any> {
  *
  * @param address
  */
-export function loadTokensBalances(address: string) {
+export function loadTokensBalances(address: string): DoWork {
   return (dispatch: any, getState: any, api: any) => {
     const tokens = getState().tokens.get('tokens').toJS();
     // build batch call request
@@ -150,13 +154,14 @@ export function loadTokensBalances(address: string) {
 /**
  * Load ERC20 contracts from Emerald Vault, gets token details from smart contract
  */
-export function loadTokenList() {
+export function loadTokenList(): DoWork {
   return (dispatch, getState, api) => {
     dispatch({
       type: ActionTypes.LOADING,
     });
     const chain = launcher.selectors.getChainName(getState());
-    api.emerald.listContracts(chain).then((result) => {
+
+    return api.emerald.listContracts(chain).then((result) => {
       // TODO: After features support
       // const tokens = result ? result.filter((contract) => {
       //     contract.features = contract.features || [];
@@ -174,7 +179,7 @@ export function loadTokenList() {
   };
 }
 
-export function addToken(token: TokenInfo) {
+export function addToken(token: TokenInfo): DoWork {
   return (dispatch, getState, api) => {
     const chain = launcher.selectors.getChainName(getState());
     return api.emerald.importContract(token.address, token.symbol, '', chain).then(() => {
@@ -196,7 +201,7 @@ export function addToken(token: TokenInfo) {
 }
 
 // FIXME: deprecated
-export function traceCall(from: string, to: string, gas: string, gasPrice: string, value: string, data: string) {
+export function traceCall(from: string, to: string, gas: string, gasPrice: string, value: string, data: string): DoWork {
   return (dispatch, getState, api) => {
     // TODO: We shouldn't detect trace api each time, we need to do it only once
     return detectTraceCall(api.geth).then((constructor) => {
@@ -210,7 +215,7 @@ export function traceCall(from: string, to: string, gas: string, gasPrice: strin
 
 export function createTokenTxData(to: string, amount: BigNumber, isTransfer: boolean): string {
   const value = amount.toString(10);
-  if (isTransfer === 'true') {
+  if (isTransfer === true) {
     return tokenContract.functionToData('transfer', { _to: to, _value: value });
   }
   return tokenContract.functionToData('approve', { _spender: to, _amount: value });

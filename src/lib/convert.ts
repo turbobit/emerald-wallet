@@ -63,7 +63,7 @@ export function getNakedAddress(address) {
   return address.toLowerCase().replace('0x', '');
 }
 
-export function padLeft(n, width, z) {
+export function padLeft(n: string, width: number, z?: string) {
   z = z || '0';
   n += '';
   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;

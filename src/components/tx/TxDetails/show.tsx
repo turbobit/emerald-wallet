@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Map } from 'immutable';
@@ -21,16 +20,18 @@ import classes from './show.scss';
 const log = createLogger('TxDetails');
 
 type Props = {
-    showFiat: boolean,
-    goBack: (?any) => void,
-    openAccount: (?any) => void,
-    currentCurrency: string,
-    fromAccount: any,
-    toAccount: any,
-    rates: Map<string, number>,
-    transaction: any,
-    account: ?any
-}
+  showFiat: boolean,
+  goBack: (account: any) => void,
+  openAccount: (account: any) => void,
+  currentCurrency: string,
+  fromAccount: any,
+  toAccount: any,
+  rates: Map<string, number>,
+  transaction: any,
+  account: any,
+  repeatTx: any,
+  muiTheme?: any
+};
 
 export const TransactionShow = (props: Props) => {
   const { transaction, account, fromAccount, toAccount, openAccount, goBack, repeatTx, muiTheme } = props;
