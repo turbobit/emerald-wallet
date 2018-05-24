@@ -35,6 +35,7 @@ const config = {
       path.join(__dirname, 'electron'),
       path.join(__dirname, 'node_modules'),
     ],
+<<<<<<< HEAD
     alias: {
       'babel-polyfill': path.join(__dirname, 'babel-polyfill/dist/polyfill.js'),
     },
@@ -51,6 +52,16 @@ const config = {
           },
         },
       },
+=======
+  },
+  externals: {
+    react: 'React',
+  },
+  module: {
+    rules: [
+      { test: /\.t?j?sx?$/, loader: "awesome-typescript-loader" },
+      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
+>>>>>>> 3a1bf2f... Move to typescript
       {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({

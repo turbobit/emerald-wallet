@@ -1,4 +1,3 @@
-// @flow
 import LedgerEth from 'ledgerco/src/ledger-eth';
 import LedgerComm from 'ledgerco/src/ledger-comm-u2f';
 import uuid from 'uuid/v4';
@@ -136,7 +135,7 @@ export function setWatch(value: boolean) {
   });
 }
 
-export function selectAddr(addr: ?string) {
+export function selectAddr(addr?: string) {
   return {
     type: ActionTypes.ADDR_SELECTED,
     value: addr,

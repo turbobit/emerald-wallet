@@ -1,10 +1,17 @@
-/* @flow */
 import ethAbi from 'ethereumjs-abi';
 
 type AbiFunction = {
     name: string,
     inputs: any,
     outputs: any,
+};
+
+type Inputs = {
+  _to?: string,
+  _owner?: string,
+  _value?: string,
+  _spender?: string,
+  _amount?: string,
 };
 
 type ContractAbi = Array<AbiFunction>;
@@ -16,11 +23,11 @@ export default class Contract {
       this.abi = abi;
     }
 
-    getFunction(name: string): ?AbiFunction {
+    getFunction(name: string): AbiFunction {
       return this.abi.find((f) => (f.name === name));
     }
 
-    functionToData(name: string, inputs): string {
+  functionToData(name: string, inputs?: Inputs): string {
       const func = this.getFunction(name);
       if (func) {
         const types = [];

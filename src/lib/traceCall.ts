@@ -2,9 +2,11 @@
 import { EthRpc, convert } from 'emerald-js';
 import BigNumber from 'bignumber.js';
 
-type Call = {
+type Params = Array<Transaction | Array<string> | string>;
+
+type Call =  {
     method: string,
-    params: Array<any>,
+    params: Params
 }
 
 type Transaction = {
@@ -18,7 +20,7 @@ type Transaction = {
 
 interface ITracer {
     buildRequest(): Call;
-    estimateGas(trace: any): ?BigNumber;
+    estimateGas(trace: any): BigNumber | null;
 }
 
 /**
@@ -32,7 +34,7 @@ class CommonCallTracer implements ITracer {
     }
 
     buildRequest(): Call {
-      const params = [{
+      const params: Params = [{
         from: this.tx.from,
         to: this.tx.to,
         gas: this.tx.gas,
@@ -40,6 +42,7 @@ class CommonCallTracer implements ITracer {
         value: this.tx.value,
         data: this.tx.data,
       }];
+
       params.push('latest');
 
       return {
@@ -67,7 +70,7 @@ export class ParityTracer implements ITracer {
     }
 
     buildRequest(): Call {
-      const params = [{
+      const params: Params = [{
         from: this.tx.from,
         to: this.tx.to,
         gas: this.tx.gas,
@@ -147,7 +150,7 @@ class ClassicGethTracer implements ITracer {
       this.tx = tx;
     }
     buildRequest(): Call {
-      const params = [{
+      const params: Params = [{
         from: this.tx.from,
         to: this.tx.to,
         gas: this.tx.gas,

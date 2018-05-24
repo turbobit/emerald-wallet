@@ -1,6 +1,6 @@
 // @flow
 import { convert } from 'emerald-js';
-import type { Transaction } from './types';
+import { Transaction } from './types';
 
 const { toBigNumber } = convert;
 
@@ -26,7 +26,7 @@ export function loadTransactions(key: string): Array<Transaction> {
       txs = JSON.parse(old);
       localStorage.removeItem('trackedTransactions');
     } else {
-      const storedTxs: ?string = localStorage.getItem(key);
+      const storedTxs: string = localStorage.getItem(key);
       if (storedTxs) {
         txs = JSON.parse(storedTxs);
       }

@@ -20,10 +20,10 @@ export function loadSettings() {
         show: showHiddenAccounts,
       });
 
-      const numConfirmations = localStorage.getItem('numConfirmations') || 12;
+      const numConfirmations = parseInt(localStorage.getItem('numConfirmations'), 10) || 12;
       dispatch({
         type: ActionTypes.NUM_CONFIRMATIONS,
-        numConfirmations: parseInt(numConfirmations, 10),
+        numConfirmations
       });
     }
   };
@@ -53,7 +53,7 @@ export function update(settings: { language: string, localeCurrency: string, sho
       }),
       dispatch({
         type: ActionTypes.NUM_CONFIRMATIONS,
-        numConfirmations: parseInt(settings.numConfirmations, 10),
+        numConfirmations: settings.numConfirmations,
       }),
     ]).then(() => {
       return dispatch(screen.actions.showNotification('Settings has been saved', 'success', 3000));
