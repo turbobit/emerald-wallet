@@ -35,24 +35,6 @@ const config = {
       path.join(__dirname, 'electron'),
       path.join(__dirname, 'node_modules'),
     ],
-<<<<<<< HEAD
-    alias: {
-      'babel-polyfill': path.join(__dirname, 'babel-polyfill/dist/polyfill.js'),
-    },
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx|es6)$/,
-        exclude: /(node_modules)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['es2015', 'react', 'stage-2', 'flow'],
-          },
-        },
-      },
-=======
   },
   externals: {
     react: 'React',
@@ -61,7 +43,6 @@ const config = {
     rules: [
       { test: /\.t?j?sx?$/, loader: "awesome-typescript-loader" },
       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
->>>>>>> 3a1bf2f... Move to typescript
       {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
