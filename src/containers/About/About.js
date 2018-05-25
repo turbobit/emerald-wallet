@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { Logo as EtcLogo } from 'emerald-js-ui/lib/icons';
 import { Button } from 'emerald-js-ui';

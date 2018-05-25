@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import { Row, Col } from 'react-flexbox-grid/lib/index';
 import { Logo as LogoIcon } from 'emerald-js-ui/lib/icons';

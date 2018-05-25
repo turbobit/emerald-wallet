@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { AutoComplete } from 'material-ui';
 import { shallow } from 'enzyme';
 import HdPath from './hdPath';

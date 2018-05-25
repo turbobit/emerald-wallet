@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import React from 'react';
+import * as React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Card, CardText } from 'material-ui';
 import { TextField } from 'redux-form-material-ui';

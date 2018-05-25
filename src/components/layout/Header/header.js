@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { AppBar, FlatButton, LinearProgress } from 'material-ui';
 import { Block as BlockIcon, Settings as SettingsIcon } from 'emerald-js-ui/lib/icons3';
 import SyncWarning from '../../../containers/SyncWarning';

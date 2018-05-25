@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { FlatButton, Popover } from 'material-ui';
 import { List, ListItem } from 'material-ui/List';
