@@ -1,4 +1,4 @@
-import { React } from from 'react';
+import * as React from from 'react';
 import { Button, Warning, WarningHeader, WarningText } from 'emerald-js-ui';
 import { Form, Row, styles as formStyles } from 'elements/Form';
 import getLoadingIcon from '../getLoadingIcon';
