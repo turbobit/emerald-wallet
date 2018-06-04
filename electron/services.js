@@ -192,6 +192,8 @@ class Services {
           geth.on('exit', (code) => {
             this.gethStatus = STATUS.NOT_STARTED;
             log.error(`geth process exited with code: ${code}`);
+            log.warn('Retrying start local geth');
+            this.startGeth();
           });
           if (geth.pid > 0) {
             waitRpc(this.geth.getUrl()).then((clientVersion) => {
@@ -249,6 +251,8 @@ class Services {
           this.connectorStatus = STATUS.NOT_STARTED;
           log.error(`Emerald Connector process exited with code: ${code}`);
           this.connector.proc = null;
+          log.warn('Emerald Connector - retrying start');
+          this.startConnector();
         });
         emerald.on('uncaughtException', (e) => {
           log.error((e && e.stack) ? e.stack : e);
