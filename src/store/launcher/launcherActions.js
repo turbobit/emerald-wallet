@@ -97,41 +97,6 @@ export function saveSettings(extraSettings) {
   };
 }
 
-export function listenElectron() {
-  return (dispatch, getState) => {
-    log.debug('Running launcher listener');
-
-    ipcRenderer.on('launcher', (event, type, message) => {
-      log.debug('launcher listener: ', 'type', type, 'message', message);
-
-      dispatch({
-        type: `LAUNCHER/${type}`,
-        ...message,
-      });
-
-      const state = getState();
-
-      if (type === 'CHAIN') {
-        if (getState().launcher.getIn(['chain', 'id']) !== message.chainId) {
-          // Launcher sent chain different from what user has chosen
-          // Alert !
-          dispatch(screen.actions.showError(
-            new Error(`Launcher connected to invalid chain: [${message.chain}, ${message.chainId}]`)));
-        } else {
-          dispatch({
-            type: 'NETWORK/SWITCH_CHAIN',
-            ...message,
-          });
-        }
-      }
-
-      if (isEthRpcReady(state)) {
-        dispatch(loadClientVersion());
-      }
-    });
-  };
-}
-
 export function connecting(value) {
   return {
     type: 'LAUNCHER/CONNECTING',

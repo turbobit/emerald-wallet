@@ -164,6 +164,35 @@ function newWalletVersionCheck() {
   });
 }
 
+const electronActionEmitter = () => {
+  ipcRenderer.on('launcher', (event, type, message) => {
+    requestIdleCallback(() => {
+      log.debug('launcher listener: ', 'type', type, 'message', message);
+
+      store.dispatch({
+        type: `LAUNCHER/${type}`,
+        ...message,
+      });
+
+      const state = store.getState();
+
+      if (type === 'CHAIN') {
+        if (state.launcher.getIn(['chain', 'id']) !== message.chainId) {
+          // Launcher sent chain different from what user has chosen
+          // Alert !
+          store.dispatch(screen.actions.showError(
+            new Error(`Launcher connected to invalid chain: [${message.chain}, ${message.chainId}]`)));
+        } else {
+          store.dispatch({
+            type: 'NETWORK/SWITCH_CHAIN',
+            ...message,
+          });
+        }
+      }
+    });
+  });
+};
+
 export const start = () => {
   try {
     store.dispatch(readConfig());
@@ -171,7 +200,7 @@ export const start = () => {
   } catch (e) {
     log.error(e);
   }
-  store.dispatch(listenElectron());
+  electronActionEmitter();
   store.dispatch(screen.actions.gotoScreen('welcome'));
   newWalletVersionCheck();
 };
