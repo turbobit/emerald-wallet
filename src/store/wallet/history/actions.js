@@ -133,8 +133,6 @@ export function refreshTrackedTransactions() {
           .filter((tx) => state.wallet.settings.get('numConfirmations') < tx.get('blockNumber') - state.network.get('currentBlock').get('height'))
       .map((tx) => tx.get('hash'));
 
-    debugger;
-
     chunk(hashes.toArray(), 20).forEach((group) => dispatch(refreshTransactions(group)));
   };
 }
