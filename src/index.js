@@ -41,8 +41,6 @@ function start() {
   );
 
   ReactDOM.render(<App />, document.getElementById('app'));
-
-  startStore();
 }
 
 const showAbout = () => {

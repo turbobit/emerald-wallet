@@ -19,7 +19,7 @@ export function readConfig() {
     const remote = global.require('electron').remote;
     const launcherConfig = remote.getGlobal('launcherConfig').get();
 
-    log.debug(`Got launcher config from electron: ${JSON.stringify(launcherConfig)}`);
+    log.info(`Got launcher config from electron: ${JSON.stringify(launcherConfig)}`);
 
     return {
       type: 'LAUNCHER/CONFIG',

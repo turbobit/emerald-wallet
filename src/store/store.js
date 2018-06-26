@@ -45,7 +45,7 @@ const reducers = {
  *
  * @param _api
  */
-export const createStore = (_api) => {
+const createStore = (_api) => {
   const storeMiddleware = [
     reduxMiddleware.promiseCatchAll,
     thunkMiddleware.withExtraArgument(_api),
@@ -91,7 +91,7 @@ function refreshLong() {
   setTimeout(refreshLong, intervalRates.continueRefreshLongRate);
 }
 
-export function startSync() {
+function startSync() {
   store.dispatch(network.actions.getGasPrice());
   store.dispatch(loadClientVersion());
   store.dispatch(Addressbook.actions.loadAddressBook());
@@ -193,59 +193,34 @@ const electronActionEmitter = () => {
   });
 };
 
-export const start = () => {
-  try {
-    store.dispatch(readConfig());
-    store.dispatch(settings.actions.loadSettings());
-  } catch (e) {
-    log.error(e);
-  }
-  electronActionEmitter();
-  store.dispatch(screen.actions.gotoScreen('welcome'));
-  newWalletVersionCheck();
-};
+export function startServices() {
+  startSync();
 
-export function waitForServices() {
-  const unsubscribe = store.subscribe(() => {
-    const state = store.getState();
-    if (state.launcher.get('terms') === 'v1'
-            && state.launcher.getIn(['geth', 'status']) === 'ready'
-            && state.launcher.getIn(['connector', 'status']) === 'ready') {
-      unsubscribe();
-      log.info('All services are ready to use by Wallet');
-      startSync();
-      // If not first run, go right to home when ready.
-      if (state.wallet.screen.get('screen') === 'welcome') { //  && !state.launcher.get('firstRun'))
-        store.dispatch(accounts.actions.loadAccountsList()).then(() => {
-          const loadedAccounts = store.getState().accounts.get('accounts');
-          if (loadedAccounts.count() > 0) {
-            store.dispatch(screen.actions.gotoScreen('home'));
-          } else {
-            store.dispatch(screen.actions.gotoScreen('landing'));
-          }
-        });
-      }
+  store.dispatch(accounts.actions.loadAccountsList()).then(() => {
+    const loadedAccounts = store.getState().accounts.get('accounts');
+    if (loadedAccounts.count() > 0) {
+      store.dispatch(screen.actions.gotoScreen('home'));
+    } else {
+      store.dispatch(screen.actions.gotoScreen('landing'));
     }
   });
-
-  function checkServiceStatus() {
-    // hack to make some stuff work in storybook: @shanejonas
-    if (!ipcRenderer) {
-      return;
-    }
-    ipcRenderer.send('get-status');
-  }
-  setTimeout(checkServiceStatus, 2000);
 }
 
 export function waitForServicesRestart() {
+  const isReady = (launcher) => store.getState().launcher.getIn([launcher, 'status']) !== 'ready';
+
   store.dispatch(connecting(true));
+
   const unsubscribe = store.subscribe(() => {
     const state = store.getState();
-    if (state.launcher.getIn(['geth', 'status']) !== 'ready'
-            || state.launcher.getIn(['connector', 'status']) !== 'ready') {
+
+    const gethIsReady = isReady('geth');
+    const connectorIsReady = isReady('connector');
+    const termsIsV1 = state.launcher.get('terms') === 'v1';
+
+    if (gethIsReady && connectorIsReady && termsIsV1) {
       unsubscribe();
-      waitForServices();
+      startServices();
     }
   });
 }
@@ -268,5 +243,13 @@ export function screenHandlers() {
   });
 }
 
-waitForServices();
-screenHandlers();
+export const start = () => {
+  waitForServicesRestart();
+  screenHandlers();
+  electronActionEmitter();
+  store.dispatch(readConfig());
+  store.dispatch(settings.actions.loadSettings());
+  newWalletVersionCheck();
+};
+
+start();

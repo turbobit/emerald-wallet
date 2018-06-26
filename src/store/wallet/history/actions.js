@@ -127,9 +127,13 @@ export function refreshTransaction(hash: string) {
  */
 export function refreshTrackedTransactions() {
   return (dispatch, getState) => {
+    const state = getState();
     const hashes = allTrackedTxs(getState())
-      .filter((tx) => tx.get('totalRetries', 0) <= 10)
+          .filter((tx) => tx.get('totalRetries', 0) <= 10)
+          .filter((tx) => state.wallet.settings.get('numConfirmations') < tx.get('blockNumber') - state.network.get('currentBlock').get('height'))
       .map((tx) => tx.get('hash'));
+
+    debugger;
 
     chunk(hashes.toArray(), 20).forEach((group) => dispatch(refreshTransactions(group)));
   };
